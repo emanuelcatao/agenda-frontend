@@ -40,7 +40,7 @@ interface ApiResponse {
 })
 export class ContatoService {
 
-  private apiUrl = 'http://localhost:8080/api/v1/contatos';
+  private apiUrl = 'https://bookish-umbrella-5r7xv46p575cx5r-8080.app.github.dev/api/v1/contatos';
 
   constructor(private http: HttpClient) { }
 
@@ -67,6 +67,7 @@ export class ContatoService {
   }
   
   criarContato(contato: Contato): Observable<Contato> {
+    console.log(contato);
     return this.http.post<Contato>(this.apiUrl, contato);
   }
 
