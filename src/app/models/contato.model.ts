@@ -4,4 +4,5 @@ export class Contato {
     email: string = '';
     dataNascimento: string = '';
     telefone: string = '';
+    urlImagemPerfil: string = '';
 }

@@ -28,7 +28,8 @@ export class ContatoModalComponent implements OnInit {
       nome: [contato.nome, Validators.required],
       email: [contato.email, [Validators.required, Validators.email]],
       telefone:[contato.telefone, Validators.required],
-      dataNascimento: [contato.dataNascimento, Validators.required]
+      dataNascimento: [contato.dataNascimento, Validators.required],
+      urlImagemPerfil: [contato.urlImagemPerfil]
     });
   }
 
@@ -73,7 +74,9 @@ export class ContatoModalComponent implements OnInit {
       next: (response) => {
         console.log(response);
         const imageUrl = response.data.link;
-        this.form.get('imagemUrl')?.setValue(imageUrl);
+        console.log(imageUrl);
+        this.form.get('urlImagemPerfil')?.setValue(imageUrl);
+        console.log(this.form.get('imagemUrl'));
       },
       error: error => {
         console.error('Erro ao fazer upload da imagem:', error);

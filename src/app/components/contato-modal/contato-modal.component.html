@@ -23,8 +23,15 @@
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
     
+        <!-- Mostrando a imagem atual -->
+        <img *ngIf="form.get('urlImagemPerfil')?.value" [src]="form.get('urlImagemPerfil')?.value" alt="Imagem atual" width="100">
+
+        <!-- Input para selecionar uma nova imagem -->
         <input type="file" (change)="handleFileInput($event)" accept="image/*">
+
+        <!-- Pré-visualização da nova imagem selecionada -->
         <img *ngIf="previewUrl" [src]="previewUrl" alt="Pré-visualização da imagem" width="100">
+
     </form>
 </mat-dialog-content>
 

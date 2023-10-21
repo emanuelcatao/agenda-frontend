@@ -3,7 +3,10 @@
         <mat-card class="contact-card">
             <div class="contact-position">#{{ i + 1 }}</div>
             
-            <div class="contact-profile-pic example-header-image"></div>
+            <div 
+                class="contact-profile-pic example-header-image"
+                [ngStyle]="{'background-image': contato.urlImagemPerfil ? 'url(' + contato.urlImagemPerfil + ')' : ''}">
+            </div>
             
             <div class="contact-details">
                 <mat-list-item><b>Nome:</b> {{ contato.nome }}</mat-list-item>
