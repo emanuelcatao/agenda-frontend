@@ -1,0 +1,33 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.header-title {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.contacts-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px; 
+    margin-bottom: 20px;
+}
+
+.contacts-title {
+    font-weight: bold;
+}
+
+.contacts-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.create-button {
+    margin-left: auto;
+}

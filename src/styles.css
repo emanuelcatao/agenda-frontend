@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body {
+    background-color: #1d1d1d;
+    font-family: 'Roboto Mono', monospace;
+    color: #f1f1f1;
+    margin: 0;
+    padding: 0;
+}
+
+.mat-snack-bar-container.custom-snackbar {
+    background-color: #a8ff78 !important;
+}
+
