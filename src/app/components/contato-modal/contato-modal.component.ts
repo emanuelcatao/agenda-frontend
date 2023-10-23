@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
+
+interface UploadResponse {
+  imageUrl: string;
+}
 
 @Component({
     selector: 'app-contato-modal',
@@ -12,7 +16,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ContatoModalComponent implements OnInit {
   form!: FormGroup;
-  imgurUrl: string = 'https://api.imgur.com/3/image';
+  uploadUrl: string = 'http://localhost:8080/api/v1/contatos/upload';
 
   constructor(
     private fb: FormBuilder,
@@ -33,25 +37,40 @@ export class ContatoModalComponent implements OnInit {
     });
   }
 
+  applyPhoneMask(event: any) {
+    let value = event.target.value;
+    value = value.replace(/\D/g, "");
+  
+    value = value.substring(0, 11);
+  
+    if (value.length <= 10) {
+      value = value.replace(/^(\d{0,2})(\d{0,4})(\d{0,4}).*/, "($1)$2-$3");
+    } else {
+      value = value.replace(/^(\d{0,2})(\d{0,5})(\d{0,4}).*/, "($1)$2-$3");
+    }
+  
+    event.target.value = value;
+    this.form.get('telefone')?.setValue(value); 
+  }
+  
+
+  onTelefoneBlur(input: HTMLInputElement) {
+    if (!/^\(\d{2}\)\d{4,5}-\d{4}$/.test(input.value)) {
+        this.form.get('telefone')?.setErrors({ 'incorrect': true });
+    }
+  }
+
   previewUrl: string | null = null;
 
   handleFileInput(event: Event) {
     const input = event.target as HTMLInputElement;
     const files = input.files;
     if (files && files.length > 0) {
-      const fileToUpload = files.item(0);
-      if (fileToUpload) { 
-        this.uploadToImgur(fileToUpload);
-      }
+        const fileToPreview = files.item(0);
+        if (fileToPreview) { 
+            this.previewImage(fileToPreview);
+        }
     }
-  }
-
-  convertToBase64(file: File | null, callback: (result: string) => void) {
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      callback(event.target.result.split(',')[1]);
-    }
-    reader.readAsDataURL(file as Blob);
   }
   
   previewImage(file: File | null) {
@@ -62,32 +81,38 @@ export class ContatoModalComponent implements OnInit {
     reader.readAsDataURL(file as Blob);
   }
 
-  uploadToImgur(file: File) {
-    const headers = new HttpHeaders({
-      'Authorization': 'Client-ID 9e2de936d89e6ce'
-    });
-    
+  uploadImage(file: File): Observable<UploadResponse> {
     const formData = new FormData();
-    formData.append('image', file, file.name);
+    formData.append('file', file, file.name);
     
-    this.http.post<any>(this.imgurUrl, formData, { headers }).subscribe({
-      next: (response) => {
-        console.log(response);
-        const imageUrl = response.data.link;
-        console.log(imageUrl);
-        this.form.get('urlImagemPerfil')?.setValue(imageUrl);
-        console.log(this.form.get('imagemUrl'));
-      },
-      error: error => {
-        console.error('Erro ao fazer upload da imagem:', error);
-      }
-    });
-  }  
-  
+    return this.http.post<UploadResponse>(this.uploadUrl, formData);
+  }
+
   salvar() {
     if (this.form.valid) {
-      const contatoAtualizado = this.form.value;
-      this.dialogRef.close(contatoAtualizado);
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileToUpload = fileInput?.files?.item(0);
+      
+      if (fileToUpload) {
+        this.uploadImage(fileToUpload).subscribe({
+          next: (response: UploadResponse) => {
+            console.log(response.imageUrl);
+            this.form.get('urlImagemPerfil')?.setValue(response.imageUrl);
+            this.finalizeSave();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error('Erro ao fazer upload da imagem:', error);
+          }
+        });
+      } else {
+        this.finalizeSave();
+      }
     }
   }
+
+  finalizeSave() {
+    const contatoAtualizado = this.form.value;
+    this.dialogRef.close(contatoAtualizado);
+  }
+
 }

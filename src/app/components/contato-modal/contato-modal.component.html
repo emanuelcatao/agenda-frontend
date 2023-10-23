@@ -1,37 +1,41 @@
 <h2 mat-dialog-title>Editar Contato</h2>
 
 <mat-dialog-content>
-    <form [formGroup]="form">
-        <mat-form-field>
-            <input matInput placeholder="Nome" formControlName="nome">
-        </mat-form-field>
-    
-        <mat-form-field>
-            <input matInput placeholder="Email" formControlName="email">
-            <mat-error *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched">
-                Email inválido!
-            </mat-error>
-        </mat-form-field>
+    <form enctype="multipart/form-data" [formGroup]="form" class="form-layout">
+        <div class="left-column">
+            <img *ngIf="previewUrl; else defaultImage" [src]="previewUrl" alt="Pré-visualização da imagem" class="preview-image">
+            <ng-template #defaultImage>
+                <img src="../../../assets/default-profile-pic.png" alt="Imagem padrão" class="preview-image">
+            </ng-template>
 
-        <mat-form-field>
-            <input matInput placeholder="Telefone" formControlName="telefone">
-        </mat-form-field>
-    
-        <mat-form-field>
-            <input matInput [matDatepicker]="picker" placeholder="Data de Nascimento" formControlName="dataNascimento">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-    
-        <!-- Mostrando a imagem atual -->
-        <img *ngIf="form.get('urlImagemPerfil')?.value" [src]="form.get('urlImagemPerfil')?.value" alt="Imagem atual" width="100">
+            <input type="file" (change)="handleFileInput($event)" accept="image/*" class="file-input"> <span class="required-marker">*</span>
+        </div>
 
-        <!-- Input para selecionar uma nova imagem -->
-        <input type="file" (change)="handleFileInput($event)" accept="image/*">
+        <div class="right-column">
+            <mat-form-field>
+                <input matInput placeholder="Nome *" formControlName="nome"> <span class="required-marker">*</span>
+            </mat-form-field>
+        
+            <mat-form-field>
+                <input matInput placeholder="Email" formControlName="email"> <span class="required-marker">*</span>
+                <mat-error *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched">
+                    Email inválido!
+                </mat-error>
+            </mat-form-field>
 
-        <!-- Pré-visualização da nova imagem selecionada -->
-        <img *ngIf="previewUrl" [src]="previewUrl" alt="Pré-visualização da imagem" width="100">
-
+            <mat-form-field>
+                <input matInput #telefoneInput placeholder="Telefone" formControlName="telefone" (keyup)="applyPhoneMask($event)" (blur)="onTelefoneBlur(telefoneInput)"><span class="required-marker">*</span>
+                <mat-error *ngIf="form.get('telefone')?.hasError('incorrect') && form.get('telefone')?.touched">
+                    Formato de telefone inválido!
+                </mat-error>                
+            </mat-form-field>
+        
+            <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Data de Nascimento" formControlName="dataNascimento"><span class="required-marker">*</span>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
     </form>
 </mat-dialog-content>
 
@@ -39,3 +43,4 @@
     <button mat-button mat-dialog-close>Cancelar</button>
     <button mat-button (click)="salvar()">Salvar</button>
 </mat-dialog-actions>
+

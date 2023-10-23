@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from 'src/app-routing.module';
@@ -27,7 +28,8 @@ import { ConfirmacaoDialogComponent } from './components/confirmacao-dialog/conf
     AppComponent,
     ListaContatosComponent, 
     PaginaInicialComponent, 
-    ContatoModalComponent, ConfirmacaoDialogComponent
+    ContatoModalComponent, 
+    ConfirmacaoDialogComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -42,6 +44,7 @@ import { ConfirmacaoDialogComponent } from './components/confirmacao-dialog/conf
     MatSnackBarModule,
     MatInputModule,
     MatIconModule,
+    ScrollingModule,
     ReactiveFormsModule,
     BrowserModule,
     HttpClientModule,

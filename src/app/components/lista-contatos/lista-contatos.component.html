@@ -1,30 +1,31 @@
-<mat-list *ngIf="contatos.length > 0">
-    <ng-container *ngFor="let contato of contatos; let i = index">
-        <mat-card class="contact-card">
-            <div class="contact-position">#{{ i + 1 }}</div>
-            
-            <div 
-                class="contact-profile-pic example-header-image"
-                [ngStyle]="{'background-image': contato.urlImagemPerfil ? 'url(' + contato.urlImagemPerfil + ')' : ''}">
-            </div>
-            
-            <div class="contact-details">
-                <mat-list-item><b>Nome:</b> {{ contato.nome }}</mat-list-item>
-                <mat-list-item><b>Email:</b> {{ contato.email }}</mat-list-item>
-                <mat-list-item><b>Telefone:</b> {{ contato.telefone }}</mat-list-item>
-                <mat-list-item><b>Data Nascimento:</b> {{ contato.dataNascimento | date:'dd/MM/yyyy'}}</mat-list-item>
-            </div>
-            
-            <mat-card-actions class="contact-actions">
-                <button mat-raised-button color="warn" (click)="deletarContato(contato.id)">
-                    Excluir
-                </button>
-                <button mat-raised-button color="accent" (click)="editarContato(contato.id)">Editar</button>
-            </mat-card-actions>
-        </mat-card>
-        <mat-divider></mat-divider>
-    </ng-container>
-</mat-list>
-
+<div class="scroll-container" cdkScrollable (scrolled)="onScroll($event)">
+    <mat-list *ngIf="contatos.length > 0">
+        <ng-container *ngFor="let contato of contatos; let i = index">
+            <mat-card class="contact-card">
+                <div class="contact-position">#{{ i + 1 }}</div>
+                
+                <div 
+                    class="contact-profile-pic example-header-image"
+                    [ngStyle]="{'background-image': contato.urlImagemPerfil ? 'url(' + contato.urlImagemPerfil + ')' : ''}">
+                </div>
+                
+                <div class="contact-details">
+                    <mat-list-item><b>Nome:</b> {{ contato.nome }}</mat-list-item>
+                    <mat-list-item><b>Email:</b> {{ contato.email }}</mat-list-item>
+                    <mat-list-item><b>Telefone:</b> {{ contato.telefone }}</mat-list-item>
+                    <mat-list-item><b>Data Nascimento:</b> {{ contato.dataNascimento | date:'dd/MM/yyyy'}}</mat-list-item>
+                </div>
+                
+                <mat-card-actions class="contact-actions">
+                    <button mat-raised-button color="warn" (click)="deletarContato(contato.id)">
+                        Excluir
+                    </button>
+                    <button mat-raised-button color="accent" (click)="editarContato(contato.id)">Editar</button>
+                </mat-card-actions>
+            </mat-card>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-list>
+</div>
 
   

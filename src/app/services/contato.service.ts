@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Contato } from '../models/contato.model';
@@ -40,12 +40,16 @@ interface ApiResponse {
 })
 export class ContatoService {
 
-  private apiUrl = 'https://bookish-umbrella-5r7xv46p575cx5r-8080.app.github.dev/api/v1/contatos';
+  private apiUrl = 'http://localhost:8080/api/v1/contatos';
 
   constructor(private http: HttpClient) { }
 
-  listarContatos(): Observable<Contato[]> {
-    return this.http.get<ApiResponse>(this.apiUrl).pipe(
+  listarContatos(pagina = 0, tamanho = 20): Observable<Contato[]> {
+    const params = new HttpParams()
+      .set("page", String(pagina))
+      .set("size", String(tamanho));
+
+    return this.http.get<ApiResponse>(this.apiUrl, { params }).pipe(
       map(response => {
         response.content.forEach(contato => {
           const utcDate = DateTime.fromISO(contato.dataNascimento, { zone: 'utc' });

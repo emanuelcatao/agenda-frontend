@@ -1,0 +1,44 @@
+/* Layout do formulário */
+.form-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.required-marker {
+    color: red;
+    font-size: 1.2em;
+    vertical-align: super;
+    margin-left: 0;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.preview-image:hover {
+    filter: blur(5px);
+}
+
+.preview-image {
+    max-width: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.file-input {
+    cursor: pointer;
+}
+
+/* Coluna da direita */
+.right-column {
+    flex-grow: 1;
+}
+
+mat-form-field {
+    width: 100%;
+    margin-bottom: 10px;
+}
