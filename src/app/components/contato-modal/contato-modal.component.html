@@ -2,39 +2,63 @@
 
 <mat-dialog-content>
     <form enctype="multipart/form-data" [formGroup]="form" class="form-layout">
-        <div class="left-column">
-            <img *ngIf="previewUrl; else defaultImage" [src]="previewUrl" alt="Pré-visualização da imagem" class="preview-image">
-            <ng-template #defaultImage>
-                <img src="../../../assets/default-profile-pic.png" alt="Imagem padrão" class="preview-image">
-            </ng-template>
-
-            <input type="file" (change)="handleFileInput($event)" accept="image/*" class="file-input"> <span class="required-marker">*</span>
+        <div class="top-section">
+            <div class="left-column">
+                <img *ngIf="previewUrl; else defaultImage" [src]="previewUrl" alt="Pré-visualização da imagem" class="preview-image" (click)="downloadImage(previewUrl)">
+                <ng-template #defaultImage>
+                    <img formControlName="urlImagemPerfil" src="../../../assets/default-profile-pic.png" alt="Imagem padrão" class="preview-image">
+                </ng-template>
+            </div>
+            
+            <div class="right-column">
+                <input type="file" (change)="handleFileInput($event)" accept="image/*" class="file-input">
+                <mat-error *ngIf="form.get('urlImagemPerfil')?.hasError('required') && form.get('urlImagemPerfil')?.touched">
+                    Imagem é obrigatória!
+                </mat-error>
+            </div>
         </div>
 
-        <div class="right-column">
-            <mat-form-field>
-                <input matInput placeholder="Nome *" formControlName="nome"> <span class="required-marker">*</span>
-            </mat-form-field>
-        
-            <mat-form-field>
-                <input matInput placeholder="Email" formControlName="email"> <span class="required-marker">*</span>
-                <mat-error *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched">
-                    Email inválido!
-                </mat-error>
-            </mat-form-field>
+        <div class="bottom-section">
+            <div class="column">
+                <mat-form-field>
+                    <input matInput placeholder="Nome" formControlName="nome">
+                    <mat-error *ngIf="form.get('nome')?.touched">
+                        Nome é obrigatório!
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field>
-                <input matInput #telefoneInput placeholder="Telefone" formControlName="telefone" (keyup)="applyPhoneMask($event)" (blur)="onTelefoneBlur(telefoneInput)"><span class="required-marker">*</span>
-                <mat-error *ngIf="form.get('telefone')?.hasError('incorrect') && form.get('telefone')?.touched">
-                    Formato de telefone inválido!
-                </mat-error>                
-            </mat-form-field>
-        
-            <mat-form-field>
-                <input matInput [matDatepicker]="picker" placeholder="Data de Nascimento" formControlName="dataNascimento"><span class="required-marker">*</span>
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Email" formControlName="email">
+                    <mat-error *ngIf="form.get('email')?.hasError('email')">
+                        Email inválido!
+                    </mat-error>
+                    <mat-error *ngIf="form.get('email')?.touched">
+                        Email é obrigatório!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="column">
+                <mat-form-field>
+                    <input matInput #telefoneInput placeholder="Telefone" formControlName="telefone" (keyup)="applyPhoneMask($event)">
+                    <mat-error *ngIf="form.get('telefone')?.hasError('incorrect')">
+                        Formato de telefone inválido!
+                    </mat-error>
+                    <mat-error *ngIf="form.get('telefone')?.touched">
+                        Telefone é obrigatório!
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker" placeholder="Data de Nascimento" formControlName="dataNascimento">
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="form.get('dataNascimento')?.touched">
+                        Data de nascimento é obrigatória!
+                    </mat-error>
+                </mat-form-field>
+            </div>
         </div>
     </form>
 </mat-dialog-content>
@@ -43,4 +67,3 @@
     <button mat-button mat-dialog-close>Cancelar</button>
     <button mat-button (click)="salvar()">Salvar</button>
 </mat-dialog-actions>
-

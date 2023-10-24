@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-
 interface UploadResponse {
   imageUrl: string;
 }
@@ -33,8 +32,9 @@ export class ContatoModalComponent implements OnInit {
       email: [contato.email, [Validators.required, Validators.email]],
       telefone:[contato.telefone, Validators.required],
       dataNascimento: [contato.dataNascimento, Validators.required],
-      urlImagemPerfil: [contato.urlImagemPerfil]
+      urlImagemPerfil: [contato ? contato.urlImagemPerfil : null, Validators.required]
     });
+    this.previewUrl = contato.urlImagemPerfil;
   }
 
   applyPhoneMask(event: any) {
@@ -52,13 +52,6 @@ export class ContatoModalComponent implements OnInit {
     event.target.value = value;
     this.form.get('telefone')?.setValue(value); 
   }
-  
-
-  onTelefoneBlur(input: HTMLInputElement) {
-    if (!/^\(\d{2}\)\d{4,5}-\d{4}$/.test(input.value)) {
-        this.form.get('telefone')?.setErrors({ 'incorrect': true });
-    }
-  }
 
   previewUrl: string | null = null;
 
@@ -67,10 +60,23 @@ export class ContatoModalComponent implements OnInit {
     const files = input.files;
     if (files && files.length > 0) {
         const fileToPreview = files.item(0);
-        if (fileToPreview) { 
-            this.previewImage(fileToPreview);
-        }
+        if (fileToPreview) {
+          this.previewImage(fileToPreview);
+          const reader = new FileReader();
+          reader.onload = (e: any) => {
+              this.form.get('urlImagemPerfil')?.setValue(e.target.result);
+          };
+          reader.readAsDataURL(fileToPreview);
+      }
     }
+  }
+
+
+  downloadImage(url: string) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'imagem-perfil.jpg';
+    a.click();
   }
   
   previewImage(file: File | null) {
@@ -80,7 +86,7 @@ export class ContatoModalComponent implements OnInit {
     }
     reader.readAsDataURL(file as Blob);
   }
-
+  
   uploadImage(file: File): Observable<UploadResponse> {
     const formData = new FormData();
     formData.append('file', file, file.name);
@@ -105,8 +111,11 @@ export class ContatoModalComponent implements OnInit {
           }
         });
       } else {
+        this.form.get('urlImagemPerfil')?.markAsTouched();
         this.finalizeSave();
       }
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 

@@ -1,11 +1,11 @@
 <div class="scroll-container" cdkScrollable (scrolled)="onScroll($event)">
     <mat-list *ngIf="contatos.length > 0">
         <ng-container *ngFor="let contato of contatos; let i = index">
-            <mat-card class="contact-card">
+            <mat-card class="contact-card" [@fadeOut]="'in'">
                 <div class="contact-position">#{{ i + 1 }}</div>
                 
                 <div 
-                    class="contact-profile-pic example-header-image"
+                    class="contact-profile-pic"
                     [ngStyle]="{'background-image': contato.urlImagemPerfil ? 'url(' + contato.urlImagemPerfil + ')' : ''}">
                 </div>
                 
@@ -17,13 +17,12 @@
                 </div>
                 
                 <mat-card-actions class="contact-actions">
-                    <button mat-raised-button color="warn" (click)="deletarContato(contato.id)">
+                    <button mat-raised-button style="background-color: #E62214 !important; color: #fff !important;" (click)="deletarContato(contato.id)">
                         Excluir
                     </button>
                     <button mat-raised-button color="accent" (click)="editarContato(contato.id)">Editar</button>
                 </mat-card-actions>
             </mat-card>
-            <mat-divider></mat-divider>
         </ng-container>
     </mat-list>
 </div>

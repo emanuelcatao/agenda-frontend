@@ -3,8 +3,15 @@
     flex-direction: row;
     padding: 5px;
     align-items: center;
-    border-radius: 8px;
-    margin-bottom: 4px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: transform 0.2s;
+}
+
+.contact-card:hover {
+    transform: scale(1.005); 
+    z-index: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .contact-position {
@@ -20,8 +27,8 @@
     background-image: url('../../../assets/default-profile-pic.png');
     background-size: cover;
     margin-right: 20px;
-    background-repeat: no-repeat;  /* Para garantir que a imagem não se repita */
-    background-position: center;  /* Centraliza a imagem */
+    background-repeat: no-repeat;  
+    background-position: center;
     margin-right: 20px;
     border-radius: 50%; 
 }
@@ -41,4 +48,5 @@
 button {
     margin-bottom: 5px;
     width: 20px;
+    box-sizing: border-box;
 }

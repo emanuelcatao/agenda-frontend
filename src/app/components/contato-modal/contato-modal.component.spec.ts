@@ -1,16 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditarContatoModalComponent } from './contato-modal.component';
+import { ContatoModalComponent } from './contato-modal.component';
 
-describe('EditarContatoModalComponent', () => {
-  let component: EditarContatoModalComponent;
-  let fixture: ComponentFixture<EditarContatoModalComponent>;
+//melhorar o teste
+//criar teste para as funções
+describe('ContatoModalComponent', () => {
+  let component: ContatoModalComponent;
+  let fixture: ComponentFixture<ContatoModalComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [EditarContatoModalComponent]
+      declarations: [ContatoModalComponent]
     });
-    fixture = TestBed.createComponent(EditarContatoModalComponent);
+    fixture = TestBed.createComponent(ContatoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

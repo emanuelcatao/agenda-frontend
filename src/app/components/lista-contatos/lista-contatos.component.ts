@@ -6,11 +6,20 @@ import { ContatoModalComponent } from '../contato-modal/contato-modal.component'
 import { SharedService } from 'src/app/services/shared.service';
 import { ConfirmacaoDialogComponent } from '../confirmacao-dialog/confirmacao-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-lista-contatos',
   templateUrl: './lista-contatos.component.html',
   styleUrls: ['./lista-contatos.component.css'],
+  animations: [
+    trigger('fadeOut', [
+      state('in', style({ opacity: 1 })),
+      transition(':leave', [
+        animate(100, style({ opacity: 0, transform: 'scale(0.8)' }))
+      ])
+    ])
+  ]  
 })
 export class ListaContatosComponent implements OnInit {
 
@@ -57,8 +66,8 @@ export class ListaContatosComponent implements OnInit {
   
   @HostListener('window:scroll', ['$event'])
   onScroll(event: any): void {
-    const threshold = 300;
-    const position = window.pageYOffset + window.innerHeight;
+    const threshold = 700;
+    const position = window.scrollY + window.innerHeight;
     const height = document.documentElement.scrollHeight;
     if (position > height - threshold) {
       this.carregarContatos();
@@ -71,8 +80,8 @@ export class ListaContatosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(confirmacao => {
       if (confirmacao) {
         this.contatoService.deletarContato(id).subscribe(() => {
-          this.resetPagination();
-          this.carregarContatos();
+          this.contatos = this.contatos.filter(contato => contato.id !== id);
+          this.idsCarregados = this.idsCarregados.filter(contatoId => contatoId !== id);
           this.snackBar.open('Contato excluído com sucesso!', 'Fechar', {
             duration: 5000,
             panelClass: ['custom-snackbar'],
@@ -82,7 +91,7 @@ export class ListaContatosComponent implements OnInit {
         });
       }
     });
-  }
+  }  
 
   editarContato(id: number): void {
     this.contatoService.obterContatoPorId(id).subscribe( {

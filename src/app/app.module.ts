@@ -20,8 +20,13 @@ import { AppRoutingModule } from 'src/app-routing.module';
 import { ListaContatosComponent } from './components/lista-contatos/lista-contatos.component';
 import { PaginaInicialComponent } from './components/pagina-inicial/pagina-inicial.component';
 import { ContatoModalComponent } from './components/contato-modal/contato-modal.component';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { ConfirmacaoDialogComponent } from './components/confirmacao-dialog/confirmacao-dialog.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+
 
 @NgModule({
   declarations: [
@@ -29,7 +34,9 @@ import { ConfirmacaoDialogComponent } from './components/confirmacao-dialog/conf
     ListaContatosComponent, 
     PaginaInicialComponent, 
     ContatoModalComponent, 
-    ConfirmacaoDialogComponent
+    ConfirmacaoDialogComponent, 
+    NavbarComponent, 
+    FooterComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -50,7 +57,10 @@ import { ConfirmacaoDialogComponent } from './components/confirmacao-dialog/conf
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
