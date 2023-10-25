@@ -6,6 +6,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 :root {
     background-color: var(light-theme, --background);
     color: var(light-theme, --on-background);
+    --mdc-outlined-text-field-disabled-input-text-color: black;
 }
 
 body {
@@ -16,15 +17,17 @@ body {
     padding: 0;
 }
 
-.custom-snackbar {
+.mdc-snackbar__surface {
     background-color: #a8ff78 !important;
-    color: #FFFFFF;            
-    font-size: 16px;          
-    border-radius: 8px;       
-    padding: 4px 8px;       
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
+.mdc-snackbar__label {
+    color: black !important;
+}
+
+.mat-mdc-snack-bar-label .mdc-button__label {
+    color: red !important;
+}
 
 .dark-theme {
     --background: #1d1d1d;

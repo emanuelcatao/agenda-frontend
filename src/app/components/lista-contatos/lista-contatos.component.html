@@ -1,4 +1,4 @@
-<div class="scroll-container" cdkScrollable (scrolled)="onScroll($event)">
+<div class="scroll-container" cdkScrollable (scrolled)="onScroll()">
     <mat-list *ngIf="contatos.length > 0">
         <ng-container *ngFor="let contato of contatos; let i = index">
             <mat-card class="contact-card" [@fadeOut]="'in'">

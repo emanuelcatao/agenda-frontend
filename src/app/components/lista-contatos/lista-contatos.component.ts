@@ -35,21 +35,15 @@ export class ListaContatosComponent implements OnInit {
   ngOnInit(): void {
     this.carregarContatos();
 
-    this.sharedService.refreshContatosObservable$.subscribe(() => {
-      this.resetPagination();
-      this.carregarContatos();
+    this.sharedService.refreshContatosObservable$.subscribe((contato) => {
+      this.contatos = [contato, ...this.contatos];
+      this.contatos.sort((a, b) => a.nome.localeCompare(b.nome));
     });
   }
 
   paginaAtual = 0;
   tamanhoPagina = 20;
   idsCarregados: number[] = [];
-  
-  resetPagination(): void {
-    this.paginaAtual = 0;
-    this.contatos = [];
-    this.idsCarregados = [];
-  }
   
   carregarContatos(): void {
     this.contatoService.listarContatos(this.paginaAtual, this.tamanhoPagina).subscribe(data => {
@@ -65,7 +59,7 @@ export class ListaContatosComponent implements OnInit {
   }
   
   @HostListener('window:scroll', ['$event'])
-  onScroll(event: any): void {
+  onScroll(): void {
     const threshold = 700;
     const position = window.scrollY + window.innerHeight;
     const height = document.documentElement.scrollHeight;
@@ -86,7 +80,7 @@ export class ListaContatosComponent implements OnInit {
             duration: 5000,
             panelClass: ['custom-snackbar'],
             verticalPosition: 'top',
-            horizontalPosition: 'end'
+            horizontalPosition: 'end',
           });
         });
       }
@@ -96,9 +90,6 @@ export class ListaContatosComponent implements OnInit {
   editarContato(id: number): void {
     this.contatoService.obterContatoPorId(id).subscribe( {
       next: (contatoParaEditar) => {
-
-        console.log(contatoParaEditar);
-        
         const dialogRef = this.dialog.open(ContatoModalComponent, {
           width: '600px',
           data: { contato: contatoParaEditar }
@@ -107,8 +98,7 @@ export class ListaContatosComponent implements OnInit {
         dialogRef.afterClosed().subscribe(contatoAtualizado => {
           if (contatoAtualizado) {
             this.contatoService.editarContato(id, contatoAtualizado).subscribe(() => {
-              this.resetPagination();
-              this.carregarContatos();
+              this.contatos = this.contatos.map(contato => contato.id === id ? contatoAtualizado : contato);
             });
           }
         });
@@ -116,7 +106,7 @@ export class ListaContatosComponent implements OnInit {
       error: error => {
         console.error("Erro ao obter o contato:", error);
       }
-  });
+    });
   }
 }
 

@@ -1,20 +1,17 @@
-<h2 mat-dialog-title>Editar Contato</h2>
+<h2 mat-dialog-title>Contato</h2>
 
 <mat-dialog-content>
     <form enctype="multipart/form-data" [formGroup]="form" class="form-layout">
         <div class="top-section">
             <div class="left-column">
-                <img *ngIf="previewUrl; else defaultImage" [src]="previewUrl" alt="Pré-visualização da imagem" class="preview-image" (click)="downloadImage(previewUrl)">
-                <ng-template #defaultImage>
-                    <img formControlName="urlImagemPerfil" src="../../../assets/default-profile-pic.png" alt="Imagem padrão" class="preview-image">
-                </ng-template>
+                <img [src]="previewUrl || '../../../assets/default-profile-pic.png'" alt="Pré-visualização da imagem" class="preview-image">
             </div>
             
             <div class="right-column">
-                <input type="file" (change)="handleFileInput($event)" accept="image/*" class="file-input">
-                <mat-error *ngIf="form.get('urlImagemPerfil')?.hasError('required') && form.get('urlImagemPerfil')?.touched">
+                <input #urlImagemPerfil type="file" (change)="handleFileInput($event)" accept="image/*" class="file-input">
+                <!-- <mat-error *ngIf="form.get('urlImagemPerfil')?.hasError('required') && form.get('urlImagemPerfil')?.touched">
                     Imagem é obrigatória!
-                </mat-error>
+                </mat-error> -->
             </div>
         </div>
 
@@ -50,10 +47,10 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput [matDatepicker]="picker" placeholder="Data de Nascimento" formControlName="dataNascimento">
+                    <input matInput [matDatepicker]="picker" disabled>
                     <mat-hint>DD/MM/YYYY</mat-hint>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
                     <mat-error *ngIf="form.get('dataNascimento')?.touched">
                         Data de nascimento é obrigatória!
                     </mat-error>

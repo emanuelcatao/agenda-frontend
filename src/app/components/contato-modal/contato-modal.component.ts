@@ -31,8 +31,7 @@ export class ContatoModalComponent implements OnInit {
       nome: [contato.nome, Validators.required],
       email: [contato.email, [Validators.required, Validators.email]],
       telefone:[contato.telefone, Validators.required],
-      dataNascimento: [contato.dataNascimento, Validators.required],
-      urlImagemPerfil: [contato ? contato.urlImagemPerfil : null, Validators.required]
+      dataNascimento: [contato.dataNascimento, Validators.required]
     });
     this.previewUrl = contato.urlImagemPerfil;
   }
@@ -42,13 +41,12 @@ export class ContatoModalComponent implements OnInit {
     value = value.replace(/\D/g, "");
   
     value = value.substring(0, 11);
-  
-    if (value.length <= 10) {
-      value = value.replace(/^(\d{0,2})(\d{0,4})(\d{0,4}).*/, "($1)$2-$3");
-    } else {
-      value = value.replace(/^(\d{0,2})(\d{0,5})(\d{0,4}).*/, "($1)$2-$3");
+    console.log(value);
+    if (value.length == 10) {
+      value = value.replace(/(\d{0,2})(\d{0,4})(\d{0,4})/, "($1)$2-$3");
+    } else if (value.length > 10) {
+      value = value.replace(/(\d{0,2})(\d{0,5})(\d{0,4})/, "($1)$2-$3");
     }
-  
     event.target.value = value;
     this.form.get('telefone')?.setValue(value); 
   }
@@ -62,21 +60,8 @@ export class ContatoModalComponent implements OnInit {
         const fileToPreview = files.item(0);
         if (fileToPreview) {
           this.previewImage(fileToPreview);
-          const reader = new FileReader();
-          reader.onload = (e: any) => {
-              this.form.get('urlImagemPerfil')?.setValue(e.target.result);
-          };
-          reader.readAsDataURL(fileToPreview);
       }
     }
-  }
-
-
-  downloadImage(url: string) {
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'imagem-perfil.jpg';
-    a.click();
   }
   
   previewImage(file: File | null) {
@@ -101,9 +86,7 @@ export class ContatoModalComponent implements OnInit {
       
       if (fileToUpload) {
         this.uploadImage(fileToUpload).subscribe({
-          next: (response: UploadResponse) => {
-            console.log(response.imageUrl);
-            this.form.get('urlImagemPerfil')?.setValue(response.imageUrl);
+          next: () => {
             this.finalizeSave();
           },
           error: (error: HttpErrorResponse) => {
@@ -111,7 +94,6 @@ export class ContatoModalComponent implements OnInit {
           }
         });
       } else {
-        this.form.get('urlImagemPerfil')?.markAsTouched();
         this.finalizeSave();
       }
     } else {

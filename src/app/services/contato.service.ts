@@ -57,7 +57,7 @@ export class ContatoService {
   editarContato(id: number, contato: Contato): Observable<Contato> {
     const formattedDate = DateTime.fromISO(contato.dataNascimento, { zone: 'utc' }).toFormat('yyyy-MM-dd');
     contato.dataNascimento = formattedDate;
-    return this.http.put<Contato>(`${this.apiUrl}/${id}`, contato);
+    return this.http.patch<Contato>(`${this.apiUrl}/${id}`, contato);
   }
 
   deletarContato(id: number): Observable<void> {
