@@ -9,9 +9,6 @@
             
             <div class="right-column">
                 <input #urlImagemPerfil type="file" (change)="handleFileInput($event)" accept="image/*" class="file-input">
-                <!-- <mat-error *ngIf="form.get('urlImagemPerfil')?.hasError('required') && form.get('urlImagemPerfil')?.touched">
-                    Imagem é obrigatória!
-                </mat-error> -->
             </div>
         </div>
 
@@ -47,10 +44,10 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput [matDatepicker]="picker" disabled>
+                    <input matInput [matDatepicker]="picker" placeholder="Data de Nascimento" formControlName="dataNascimento">
                     <mat-hint>DD/MM/YYYY</mat-hint>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                    <mat-datepicker #picker></mat-datepicker>
                     <mat-error *ngIf="form.get('dataNascimento')?.touched">
                         Data de nascimento é obrigatória!
                     </mat-error>

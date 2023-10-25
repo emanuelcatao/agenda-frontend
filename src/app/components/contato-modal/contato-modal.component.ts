@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -31,7 +31,7 @@ export class ContatoModalComponent implements OnInit {
       nome: [contato.nome, Validators.required],
       email: [contato.email, [Validators.required, Validators.email]],
       telefone:[contato.telefone, Validators.required],
-      dataNascimento: [contato.dataNascimento, Validators.required]
+      dataNascimento: [contato.dataNascimento, Validators.required],
     });
     this.previewUrl = contato.urlImagemPerfil;
   }
@@ -80,29 +80,34 @@ export class ContatoModalComponent implements OnInit {
   }
 
   salvar() {
-    if (this.form.valid) {
+    console.log(this.form.valid);
+    console.log(this.previewUrl);
+    if (this.form.valid && this.previewUrl != null) {
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const fileToUpload = fileInput?.files?.item(0);
-      
       if (fileToUpload) {
         this.uploadImage(fileToUpload).subscribe({
-          next: () => {
-            this.finalizeSave();
+          next: (response) => {
+            this.finalizeSave(response.imageUrl);
           },
           error: (error: HttpErrorResponse) => {
             console.error('Erro ao fazer upload da imagem:', error);
           }
         });
-      } else {
-        this.finalizeSave();
+      } else if (this.previewUrl) {
+        this.finalizeSave(this.previewUrl);
+      }
+      else {
+        this.form.get('urlImagemPerfil')?.markAsTouched();
       }
     } else {
       this.form.markAllAsTouched();
     }
   }
 
-  finalizeSave() {
+  finalizeSave(urlImagemPerfil?: string) {
     const contatoAtualizado = this.form.value;
+    contatoAtualizado.urlImagemPerfil = urlImagemPerfil;
     this.dialogRef.close(contatoAtualizado);
   }
 

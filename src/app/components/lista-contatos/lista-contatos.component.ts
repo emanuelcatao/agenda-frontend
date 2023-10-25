@@ -33,11 +33,22 @@ export class ListaContatosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.carregarContatos();
+    this.carregarContatos(); //aqui carrega os primeiros contatos
 
+    //aqui se inscreve para receber os contatos que forem criados, quando o usuário clicar em "Criar Contato"
+    //o método triggerRefreshContatos() do sharedService é chamado, e todos os componentes que estiverem inscritos,
+    //esse por exemplo, recebem o contato criado
+
+    //para nao ter que ficar carregando a lista de contatos toda vez que um contato é criado,
+    //a lista de contatos é atualizada com o contato criado, e o contato criado é
+    //adicionado na lista de contatos, e a lista é ordenada novamente
     this.sharedService.refreshContatosObservable$.subscribe((contato) => {
       this.contatos = [contato, ...this.contatos];
       this.contatos.sort((a, b) => a.nome.localeCompare(b.nome));
+      this.idsCarregados = [contato.id, ...this.idsCarregados];
+      if (this.idsCarregados.length >= this.tamanhoPagina * (this.paginaAtual + 1)) {
+        this.paginaAtual++;
+      }
     });
   }
 
@@ -52,7 +63,7 @@ export class ListaContatosComponent implements OnInit {
   
       this.idsCarregados = [...this.idsCarregados, ...novosContatos.map(contato => contato.id)];
   
-      if (this.idsCarregados.length >= this.tamanhoPagina) {
+      if (this.idsCarregados.length >= this.tamanhoPagina * (this.paginaAtual + 1)) {
         this.paginaAtual++;
       }
     });
@@ -76,6 +87,11 @@ export class ListaContatosComponent implements OnInit {
         this.contatoService.deletarContato(id).subscribe(() => {
           this.contatos = this.contatos.filter(contato => contato.id !== id);
           this.idsCarregados = this.idsCarregados.filter(contatoId => contatoId !== id);
+  
+          if (this.contatos.length < this.tamanhoPagina && this.paginaAtual > 0) {
+            this.paginaAtual--; 
+          }
+
           this.snackBar.open('Contato excluído com sucesso!', 'Fechar', {
             duration: 5000,
             panelClass: ['custom-snackbar'],
@@ -85,7 +101,8 @@ export class ListaContatosComponent implements OnInit {
         });
       }
     });
-  }  
+  }
+  
 
   editarContato(id: number): void {
     this.contatoService.obterContatoPorId(id).subscribe( {

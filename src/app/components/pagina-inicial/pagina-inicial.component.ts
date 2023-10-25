@@ -31,7 +31,6 @@ export class PaginaInicialComponent {
     dialogRef.afterClosed().subscribe(contato => {
       if (contato) {
         this.contatoService.criarContato(contato).subscribe(() => {
-          //this.listaContatos.carregarContatos();
           this.sharedService.triggerRefreshContatos(contato);
           this.snackBar.open('Contato criado com sucesso!', 'Fechar', {
             duration: 5000,

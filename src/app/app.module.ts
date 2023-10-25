@@ -20,12 +20,15 @@ import { AppRoutingModule } from 'src/app-routing.module';
 import { ListaContatosComponent } from './components/lista-contatos/lista-contatos.component';
 import { PaginaInicialComponent } from './components/pagina-inicial/pagina-inicial.component';
 import { ContatoModalComponent } from './components/contato-modal/contato-modal.component';
-import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { ConfirmacaoDialogComponent } from './components/confirmacao-dialog/confirmacao-dialog.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { registerLocaleData } from '@angular/common';
+import pt from '@angular/common/locales/pt';
+
+registerLocaleData(pt);
 
 
 @NgModule({
@@ -59,7 +62,20 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
   ],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    {
+      provide: MAT_DATE_FORMATS, useValue: {
+        parse: {
+          dateInput: 'DD/MM/YYYY',
+        },
+        display: {
+          dateInput: 'DD/MM/YYYY',
+          monthYearLabel: 'MMMM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      }
+    },
   ],
   bootstrap: [AppComponent]
 })
