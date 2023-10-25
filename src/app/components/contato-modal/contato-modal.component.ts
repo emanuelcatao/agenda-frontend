@@ -57,9 +57,15 @@ export class ContatoModalComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const files = input.files;
     if (files && files.length > 0) {
-        const fileToPreview = files.item(0);
-        if (fileToPreview) {
+      const fileToPreview = files.item(0);
+      if (fileToPreview) {
+        const isValidImage = fileToPreview?.type.startsWith('image/');
+        if(isValidImage) {
           this.previewImage(fileToPreview);
+        } else {
+          alert('Por favor, selecione um arquivo de imagem válido.');
+          input.value = '';
+        }
       }
     }
   }
@@ -98,7 +104,8 @@ export class ContatoModalComponent implements OnInit {
         this.finalizeSave(this.previewUrl);
       }
       else {
-        this.form.get('urlImagemPerfil')?.markAsTouched();
+        //this.form.get('urlImagemPerfil')?.markAsTouched();
+        alert('Por favor, selecione um arquivo de imagem válido.');
       }
     } else {
       this.form.markAllAsTouched();
